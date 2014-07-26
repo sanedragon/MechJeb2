@@ -112,6 +112,10 @@ namespace MuMech
 			GUILayout.Label("º", GUILayout.ExpandWidth(false));
             GUILayout.EndHorizontal();
 
+            if (autopilot.limitAngleOfAttack) {
+                GuiUtils.SimpleTextBox ("AoA Limit Fadeout Altitude", autopilot.angleOfAttackLimitFadeoutAltitude, "km", 30);
+            }
+
             autopilot.autostage = GUILayout.Toggle(autopilot.autostage, "Autostage");
             if (autopilot.autostage) core.staging.AutostageSettingsInfoItem();
 

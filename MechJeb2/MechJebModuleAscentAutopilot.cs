@@ -53,6 +53,8 @@ namespace MuMech
         public bool limitAngleOfAttack = false;
         [Persistent(pass = (int)(Pass.Type | Pass.Global))]
         public EditableDouble angleOfAttackLimit = 5;
+        [Persistent(pass = (int)(Pass.Type | Pass.Global))]
+        public EditableDoubleMult angleOfAttackLimitFadeoutAltitude = new EditableDoubleMult(20000, 1000);
 
         //internal state:
         enum AscentMode { VERTICAL_ASCENT, GRAVITY_TURN, COAST_TO_APOAPSIS, CIRCULARIZE };
@@ -228,13 +230,16 @@ namespace MuMech
 
                 desiredThrustVector += steerOffset;
             }
+            desiredThrustVector = desiredThrustVector.normalized;
 
             if (limitAngleOfAttack)
             {
-                double requestedAngleOfAttack = Vector3d.Angle(desiredThrustVector, vessel.srf_velocity);
-                if (requestedAngleOfAttack > angleOfAttackLimit)
-                {
-                    desiredThrustVector = desiredThrustVector.normalized * angleOfAttackLimit + vessel.srf_velocity.normalized * (requestedAngleOfAttack - angleOfAttackLimit);
+                Vector3d limitedVector = Vector3.RotateTowards(vessel.srf_velocity.normalized, desiredThrustVector, (float)(angleOfAttackLimit * Math.PI / 180), 1).normalized;
+                if (angleOfAttackLimitFadeoutAltitude < mainBody.maxAtmosphereAltitude && vessel.altitude > angleOfAttackLimitFadeoutAltitude) {
+                    double fade = (mainBody.maxAtmosphereAltitude - vessel.altitude) / (mainBody.maxAtmosphereAltitude - angleOfAttackLimitFadeoutAltitude);
+                    desiredThrustVector = fade * limitedVector + (1 - fade) * desiredThrustVector;
+                } else {
+                    desiredThrustVector = limitedVector;
                 }
             }
 
