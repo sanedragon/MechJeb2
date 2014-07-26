@@ -106,6 +106,12 @@ namespace MuMech
             core.thrust.LimitThrottleInfoItem();
             autopilot.correctiveSteering = GUILayout.Toggle(autopilot.correctiveSteering, "Corrective steering");
 
+            GUILayout.BeginHorizontal();
+			autopilot.limitAngleOfAttack = GUILayout.Toggle(autopilot.limitAngleOfAttack, "Limit Angle of Attack");
+			autopilot.angleOfAttackLimit.text = GUILayout.TextField(autopilot.angleOfAttackLimit.text, GUILayout.Width(30));
+			GUILayout.Label("º", GUILayout.ExpandWidth(false));
+            GUILayout.EndHorizontal();
+
             autopilot.autostage = GUILayout.Toggle(autopilot.autostage, "Autostage");
             if (autopilot.autostage) core.staging.AutostageSettingsInfoItem();
 
