@@ -79,20 +79,6 @@ namespace MuMech.Properties {
                 return ((byte[])(obj));
             }
         }
-        
-        internal static byte[] lightning {
-            get {
-                object obj = ResourceManager.GetObject("lightning", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        internal static byte[] troll {
-            get {
-                object obj = ResourceManager.GetObject("troll", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
 
         internal static byte[] shader
         {
