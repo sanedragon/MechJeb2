@@ -154,7 +154,6 @@ namespace MuMech
                 }
                 GUILayout.Button("AUTO", btAuto, GUILayout.ExpandWidth(true));
             }
-            else
             {
                 GUILayout.BeginVertical();
 
@@ -321,6 +320,8 @@ namespace MuMech
 
         public void Engage()
         {
+            if (core.attitude.enabled && core.attitude.users.Count(u => !this.Equals(u)) > 0)
+                return;
             Quaternion attitude = new Quaternion();
             Vector3d direction = Vector3d.zero;
             AttitudeReference reference = AttitudeReference.ORBIT;
