@@ -213,8 +213,18 @@ namespace MuMech
 
             GUILayout.EndHorizontal();
 
-            RelativityModeSelectUI();
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Remove Node", GUILayout.ExpandWidth(true)))
+            {
+                vessel.patchedConicSolver.RemoveManeuverNode(node);
+            }
+            if (GUILayout.Button("Clear Nodes", GUILayout.ExpandWidth(true)))
+            {
+                vessel.RemoveAllManeuverNodes();
+            }
+            GUILayout.EndHorizontal();
 
+            RelativityModeSelectUI();
 
             if (core.node != null)
             {
