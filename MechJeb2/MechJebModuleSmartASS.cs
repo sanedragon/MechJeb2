@@ -209,14 +209,19 @@ namespace MuMech
                                 Engage();
                             }
                         } else if (target == Target.SURFACE_PROGRADE || target == Target.SURFACE_RETROGRADE) {
+                            double step = 1;
+                            if (Input.GetKey(KeyCode.LeftAlt))
+                                step = 0.1;
+                            if (Input.GetKey(KeyCode.RightAlt))
+                                step = 0.01;
                             GUILayout.BeginHorizontal();
                             GuiUtils.SimpleTextBox("ROL", srfVelRol, "°", 60);
                             if (GUILayout.Button("-", GUILayout.ExpandWidth(false))) {
-                                srfVelRol -= 1;
+                                srfVelRol -= step;
                                 Engage();
                             }
                             if (GUILayout.Button("+", GUILayout.ExpandWidth(false))) {
-                                srfVelRol += 1;
+                                srfVelRol += step;
                                 Engage();
                             }
                             if (GUILayout.Button("CUR", GUILayout.ExpandWidth(false))) {
@@ -231,11 +236,11 @@ namespace MuMech
                             GUILayout.BeginHorizontal();
                             GuiUtils.SimpleTextBox("PIT", srfVelPit, "°", 60);
                             if (GUILayout.Button("-", GUILayout.ExpandWidth(false))) {
-                                srfVelPit -= 1;
+                                srfVelPit -= step;
                                 Engage();
                             }
                             if (GUILayout.Button("+", GUILayout.ExpandWidth(false))) {
-                                srfVelPit += 1;
+                                srfVelPit += step;
                                 Engage();
                             }
                             if (GUILayout.Button("CUR", GUILayout.ExpandWidth(false))) {
@@ -250,11 +255,11 @@ namespace MuMech
                             GUILayout.BeginHorizontal();
                             GuiUtils.SimpleTextBox("YAW", srfVelYaw, "°", 60);
                             if (GUILayout.Button("-", GUILayout.ExpandWidth(false))) {
-                                srfVelYaw -= 1;
+                                srfVelYaw -= step;
                                 Engage();
                             }
                             if (GUILayout.Button("+", GUILayout.ExpandWidth(false))) {
-                                srfVelYaw += 1;
+                                srfVelYaw += step;
                                 Engage();
                             }
                             if (GUILayout.Button("CUR", GUILayout.ExpandWidth(false))) {
