@@ -94,6 +94,10 @@ namespace MuMech
                 node.OnGizmoUpdated(new Vector3d(radialPlus, normalPlus, prograde), node.UT);
             }
             GUILayout.Label("m/s", GUILayout.ExpandWidth(false));
+            if (GUILayout.Button("0", GUILayout.ExpandWidth(false)))
+            {
+                prograde = 0;
+            }
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
@@ -110,6 +114,10 @@ namespace MuMech
                 node.OnGizmoUpdated(new Vector3d(radialPlus, normalPlus, prograde), node.UT);
             }
             GUILayout.Label("m/s", GUILayout.ExpandWidth(false));
+            if (GUILayout.Button("0", GUILayout.ExpandWidth(false)))
+            {
+                radialPlus = 0;
+            }
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
@@ -126,6 +134,10 @@ namespace MuMech
                 node.OnGizmoUpdated(new Vector3d(radialPlus, normalPlus, prograde), node.UT);
             }
             GUILayout.Label("m/s", GUILayout.ExpandWidth(false));
+            if (GUILayout.Button("0", GUILayout.ExpandWidth(false)))
+            {
+                normalPlus = 0;
+            }
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
