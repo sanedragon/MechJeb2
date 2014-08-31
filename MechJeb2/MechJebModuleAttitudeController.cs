@@ -31,6 +31,7 @@ namespace MuMech
 
         public bool RCS_auto = false;
         public bool attitudeRCScontrol = true;
+        public bool spacePlaneMode = true;
 
         [Persistent(pass = (int)Pass.Global)]
         public bool Tf_autoTune = true;
@@ -351,10 +352,27 @@ namespace MuMech
                 Quaternion delta = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(vessel.GetTransform().rotation) * target);
 
                 Vector3d deltaEuler = new Vector3d(
-                                                        (delta.eulerAngles.x > 180) ? (delta.eulerAngles.x - 360.0F) : delta.eulerAngles.x,
-                                                        -((delta.eulerAngles.y > 180) ? (delta.eulerAngles.y - 360.0F) : delta.eulerAngles.y),
-                                                        (delta.eulerAngles.z > 180) ? (delta.eulerAngles.z - 360.0F) : delta.eulerAngles.z
-                                                    );
+                    (delta.eulerAngles.x > 180) ? (delta.eulerAngles.x - 360.0F) : delta.eulerAngles.x, //pitch
+                    -((delta.eulerAngles.y > 180) ? (delta.eulerAngles.y - 360.0F) : delta.eulerAngles.y), //yaw
+                    (delta.eulerAngles.z > 180) ? (delta.eulerAngles.z - 360.0F) : delta.eulerAngles.z // roll
+                );
+                double AoSLimit = 1;
+                double AoALimit = 15;
+                if (spacePlaneMode && vesselState.dynamicPressure > 0) {
+                    if (Math.Abs(deltaEuler.y) > AoSLimit) {
+                        //override roll to minimize sideslip
+                        deltaEuler.z = Math.Atan2(deltaEuler.y, deltaEuler.x) * 180 / Math.PI;
+                        //we can pitch up or down, so keep roll to < 90 degrees
+                        //should really try to stay upright here. maybe use vesselState.vesselRoll?
+                        if (deltaEuler.z > 90)
+                            deltaEuler.z = deltaEuler.z - 180;
+                        if (deltaEuler.z < -90)
+                            deltaEuler.z = deltaEuler.z + 180;
+                        deltaEuler.y = Math.Sign(deltaEuler.y) * AoSLimit;
+                    }
+                    if (Math.Abs(deltaEuler.x) > AoALimit)
+                        deltaEuler.x = Math.Sign(deltaEuler.x) * AoALimit;
+                }
 
                 Vector3d torque = vesselState.torqueAvailable + vesselState.torqueFromEngine * vessel.ctrlState.mainThrottle;
 
@@ -377,12 +395,14 @@ namespace MuMech
 
                 double turnAngle = Math.Abs(Vector3d.Angle(curLocalUp, tgtLocalUp));
                 Vector2d rotDirection = new Vector2d(tgtLocalUp.x, tgtLocalUp.z);
-                rotDirection = rotDirection.normalized * turnAngle / 180.0f;
+                rotDirection = rotDirection.normalized * turnAngle * Math.PI / 180.0f;
+
+                double rollComponent = (spacePlaneMode || attitudeRollMatters) ? delta.eulerAngles.z * Math.PI / 180.0F : 0F;
 
                 Vector3d err = new Vector3d(
-                                                -rotDirection.y * Math.PI,
-                                                rotDirection.x * Math.PI,
-                                                attitudeRollMatters?((delta.eulerAngles.z > 180) ? (delta.eulerAngles.z - 360.0F) : delta.eulerAngles.z) * Math.PI / 180.0F : 0F
+                                                -rotDirection.y,
+                                                rotDirection.x,
+                                                rollComponent
                                             );
 
                 err += inertia.Reorder(132) / 2;
