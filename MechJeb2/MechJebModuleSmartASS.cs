@@ -201,12 +201,59 @@ namespace MuMech
                         TargetButton(Target.VERTICAL_PLUS);
                         GUILayout.EndHorizontal();
                         if (target == Target.SURFACE) {
+                            GUILayout.BeginHorizontal();
                             GuiUtils.SimpleTextBox("HDG:", srfHdg);
+                            if (GUILayout.Button("N", GUILayout.ExpandWidth(false))) {
+                                srfHdg = 0;
+                            }
+                            if (GUILayout.Button("E", GUILayout.ExpandWidth(false))) {
+                                srfHdg = 90;
+                            }
+                            if (GUILayout.Button("S", GUILayout.ExpandWidth(false))) {
+                                srfHdg = 180;
+                            }
+                            if (GUILayout.Button("W", GUILayout.ExpandWidth(false))) {
+                                srfHdg = 270;
+                            }
+                            GUILayout.EndHorizontal();
+                            GUILayout.BeginHorizontal();
                             GuiUtils.SimpleTextBox("PIT:", srfPit);
+                            if (GUILayout.Button("0", GUILayout.ExpandWidth(false))) {
+                                srfPit = 0;
+                            }
+                            if (GUILayout.Button("90", GUILayout.ExpandWidth(false))) {
+                                srfPit = 90;
+                            }
+                            if (GUILayout.Button("+", GUILayout.ExpandWidth(false))) {
+                                srfPit += 1;
+                            }
+                            if (GUILayout.Button("-", GUILayout.ExpandWidth(false))) {
+                                srfPit -= 1;
+                            }
+                            GUILayout.EndHorizontal();
+                            GUILayout.BeginHorizontal();
                             GuiUtils.SimpleTextBox("ROL:", srfRol);
+                            if (GUILayout.Button("0", GUILayout.ExpandWidth(false))) {
+                                srfRol = 0;
+                            }
+                            if (GUILayout.Button("+", GUILayout.ExpandWidth(false))) {
+                                srfPit += 1;
+                            }
+                            if (GUILayout.Button("-", GUILayout.ExpandWidth(false))) {
+                                srfPit -= 1;
+                            }
+                            GUILayout.EndHorizontal();
+                            GUILayout.BeginHorizontal();
                             if (GUILayout.Button("EXECUTE")) {
                                 Engage();
                             }
+                            if (GUILayout.Button("HOLD")) {
+                                srfHdg = vesselState.vesselHeading.value;
+                                srfPit = vesselState.vesselPitch.value;
+                                srfRol = vesselState.vesselRoll.value;
+                                Engage();
+                            }
+                            GUILayout.EndHorizontal();
                         } else if (target == Target.SURFACE_PROGRADE || target == Target.SURFACE_RETROGRADE) {
                             double step = 1;
                             if (Input.GetKey(KeyCode.LeftAlt))
